@@ -1,0 +1,19 @@
+region,poverty_incidence_pct,se_pct,ci_low_pct,ci_high_pct
+NCR,1.1,0.1,1,1
+CAR,4.4,0.3,4,5
+Region I - Ilocos Region,8.4,0.8,7,10
+Region II - Cagayan Valley,7.2,0.6,6,8
+Region III - Central Luzon,5.7,0.4,5,6
+Region IV-A - CALABARZON,5.3,0.4,5,6
+MIMAROPA,16.3,1.1,14,18
+Region V - Bicol Region,20.3,0.8,19,22
+Region VI - Western Visayas,9.8,0.6,9,11
+NIR,22.6,1.5,20,26
+Region VII - Central Visayas,12.3,0.8,11,14
+Region VIII - Eastern Visayas,20.3,0.8,19,22
+Region IX - Zamboanga Peninsula,24.2,1.1,22,26
+Region X - Northern Mindanao,18.4,0.7,17,20
+Region XI - Davao Region,11.3,1.0,9,13
+Region XII - SOCCSKSARGEN,17.0,1.1,15,19
+Region XIII - Caraga,14.9,0.7,13,16
+BARMM,23.5,0.8,22,25

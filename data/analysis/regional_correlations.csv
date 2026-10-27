@@ -1,0 +1,4 @@
+hypothesis,x,y,n,spearman_rho,ci_low,ci_high,p_raw,p_holm,significant_after_holm,rho_needed_unadjusted,rho_needed_strictest_holm
+H1,gap_pct,poverty_incidence_pct,17,-0.1368,-0.6658,0.398,0.6006,0.6608,False,0.4821,0.571
+H2,gap_pct,lit_gap_f_minus_m,17,0.2514,-0.2696,0.7029,0.3304,0.6608,False,0.4821,0.571
+H3,func_lit_rate_female,poverty_incidence_pct,18,-0.7788,-0.9536,-0.3966,0.0001,0.0004,True,0.4683,0.5556

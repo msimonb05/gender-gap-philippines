@@ -1,0 +1,10 @@
+indicator,period,female,male,higher_is,f_to_m
+Labor force participation rate,2025,53.403,74.63,better,0.716
+Employment rate,2025,95.647,95.927,better,0.997
+Unemployment rate,2025,4.353,4.073,worse,1.069
+Underemployment rate,2025,9.85,13.319,worse,0.74
+"Average monthly wage (time-rated, full-time)",Aug 2024,,,better,1.058
+Functional literacy rate (10-64),2024,74.1,67.6,better,1.096
+"Girls-to-boys ratio, primary",SY 2023-2024,,,better,0.9
+"Girls-to-boys ratio, secondary",SY 2023-2024,,,better,1.0
+"Girls-to-boys ratio, tertiary",SY 2013-2014,,,better,1.2
