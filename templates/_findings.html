@@ -1,0 +1,18 @@
+<section class="key-findings my-4" aria-label="Key findings">
+  <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#findings" aria-expanded="false" aria-controls="findings" data-show-text="Show quick summary" data-hide-text="Hide quick summary">Show quick summary</button>
+  <div class="collapse" id="findings">
+    <div class="row g-3 pt-3">
+      {% for f in findings %}
+      <div class="col-sm-6">
+        <div class="card finding h-100">
+          <div class="card-body">
+            <p class="finding-value mb-1">{{ f.value }}</p>
+            <p class="finding-label mb-2">{{ f.label }}</p>
+            <p class="finding-note small mb-0">{{ f.note }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
