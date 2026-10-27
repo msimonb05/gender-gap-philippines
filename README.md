@@ -51,6 +51,7 @@ Requires Python 3.14.
 | `.venv\Scripts\python clean_psa_data.py` | Rebuild the cleaned data in `data/` |
 | `.venv\Scripts\python analysis.py` | Rebuild the analysis results in `data/analysis/` |
 | `.venv\Scripts\python app.py` | Start the page at `localhost:5000` |
+| `.venv\Scripts\python build_site.py` | Export the static site to `site/` (what GitHub Pages serves) |
 
 On macOS or Linux, use `.venv/bin/python` in place of `.venv\Scripts\python`.
 
