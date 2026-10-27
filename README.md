@@ -2,6 +2,8 @@
 
 A data visualizer and research report on the gender gap in the Philippines, built from public Philippine Statistics Authority (PSA) data on labor, wages, literacy, school enrollment, and poverty. The report is shown section by section on a single Flask page, with every chart drawn from the data in light or dark mode.
 
+Live site: https://msimonb05.github.io/gender-gap-philippines/
+
 ## Tech Stack
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -10,6 +12,7 @@ A data visualizer and research report on the gender gap in the Philippines, buil
 ![seaborn](https://img.shields.io/badge/seaborn-4C72B0?style=for-the-badge&logoColor=white)
 ![SciPy](https://img.shields.io/badge/SciPy-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Jinja](https://img.shields.io/badge/Jinja-B41717?style=for-the-badge&logo=jinja&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Markdown](https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white)
 
