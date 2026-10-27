@@ -1,12 +1,14 @@
 import os
 import re
+import zipfile
+from datetime import date
 from io import BytesIO
 from pathlib import Path
 
 import markdown
 import pandas as pd
 import seaborn as sns
-from flask import Flask, abort, render_template, request, send_file
+from flask import Flask, abort, render_template, request, send_file, send_from_directory
 from markdown.extensions.toc import slugify
 from markupsafe import escape
 from matplotlib import rc_context
@@ -14,7 +16,11 @@ from matplotlib.figure import Figure
 from matplotlib.ticker import FixedLocator, MaxNLocator, ScalarFormatter
 
 DATA_DIR = Path("data")
+FIGURES_DIR = Path("content/figures")
 SITE_URL = os.environ.get("SITE_URL")
+REPO_URL = os.environ.get("REPO_URL", "https://github.com/msimonb05/gender-gap-philippines")
+AUTHOR = "Mark Simon Z. Bringas"
+DATA_VINTAGE = "September 30, 2026"
 REPORT = Path("content/mapping-gender-parity-philippines.md")
 SIGN_VIEWS = {
     "psa": {
@@ -428,8 +434,9 @@ def figure_card(m):
 
 def render_report():
     source = FORMULA_RE.sub(
-        '<p class="formula"><img data-chart="chart/formula-" src="chart/formula-light.svg" '
-        'alt="gap = (male wage - female wage) / male wage x 100"></p>',
+        '<p class="formula"><img class="d-print-none" data-chart="chart/formula-" src="chart/formula-light.svg" '
+        'alt="gap = (male wage - female wage) / male wage x 100">'
+        '<img class="d-none d-print-inline" src="chart/formula-light.svg" alt="gap = (male wage - female wage) / male wage x 100"></p>',
         REPORT.read_text(encoding="utf-8"),
     )
     md = markdown.Markdown(extensions=["tables", "toc"], extension_configs={"toc": {"slugify": lambda value, sep: "s-" + slugify(value, sep)}})
@@ -440,7 +447,67 @@ def render_report():
     body = NARRATIVE_RE.sub(lambda m: citation(refs, "PSA", m[1], m[0]), body)
     body = body.replace("<table>", '<div class="table-responsive"><table class="table table-sm">').replace("</table>", "</table></div>")
     body = FIGURE_RE.sub(figure_card, body)
+    body = body.replace('<h2 id="s-abstract">', render_template("_findings.html", findings=key_findings()) + '<h2 id="s-abstract">', 1)
     return body + marker + refs_html, md.toc_tokens[0]["children"]
+
+
+def key_findings():
+    lfpr = load("analysis/scorecard").set_index("indicator").loc["Labor force participation rate"]
+    literacy = load("national_literacy").iloc[0]
+    wage_gap = load("national_wage_gap")["national_gap_pct"].iloc[0]
+    slope = load("analysis/lfpr_gap_trend").set_index("period").loc["2006-2019", "slope_pts_per_year"]
+    return [
+        {
+            "value": f"{lfpr['female']:.1f}% vs {lfpr['male']:.1f}%",
+            "label": f"Women and men in the labor force, {lfpr['period']}",
+            "note": f"The widest gap in the report. Women take part at {lfpr['f_to_m']:.2f} times the rate of men.",
+        },
+        {
+            "value": f"{literacy['func_lit_rate_female']:.1f}% vs {literacy['func_lit_rate_male']:.1f}%",
+            "label": "Women and men who are functionally literate, 2024",
+            "note": "Women lead in all 18 regions.",
+        },
+        {
+            "value": f"{-wage_gap:+.1f}%",
+            "label": "How much more women earn than men, August 2024",
+            "note": "Counts full-time wage workers only, not all working women.",
+        },
+        {
+            "value": f"{-slope:.2f} points a year",
+            "label": "How fast the labor force gap shrank, 2006 to 2019",
+            "note": "At that pace, it would take about two centuries to close.",
+        },
+    ]
+
+
+def download_files():
+    report = REPORT.read_bytes()
+    with_figures = BytesIO()
+    with zipfile.ZipFile(with_figures, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr(REPORT.name, report)
+        for png in sorted(FIGURES_DIR.glob("*.png")):
+            z.write(png, f"figures/{png.name}")
+    data = BytesIO()
+    with zipfile.ZipFile(data, "w", zipfile.ZIP_DEFLATED) as z:
+        for csv in sorted(DATA_DIR.rglob("*.csv")):
+            z.write(csv, csv.relative_to(DATA_DIR.parent).as_posix())
+    return {
+        REPORT.name: (report, "text/markdown"),
+        "report-with-figures.zip": (with_figures.getvalue(), "application/zip"),
+        "cleaned-data.zip": (data.getvalue(), "application/zip"),
+    }
+
+
+@app.context_processor
+def site_context():
+    today = date.today()
+    return {
+        "site_url": SITE_URL or request.url_root,
+        "repo_url": REPO_URL,
+        "author": AUTHOR,
+        "data_vintage": DATA_VINTAGE,
+        "last_updated": f"{today:%B} {today.day}, {today.year}",
+    }
 
 
 @app.route("/")
@@ -452,6 +519,26 @@ def report():
 @app.route("/about.html")
 def about():
     return render_template("about.html", citation={**CITATION, "url": SITE_URL or request.url_root}, glossary=GLOSSARY)
+
+
+@app.route("/downloads.html")
+def downloads():
+    sizes = {name: len(content) for name, (content, _) in download_files().items()}
+    return render_template("downloads.html", report_name=REPORT.name, sizes=sizes, repo_url=REPO_URL)
+
+
+@app.route("/downloads/<name>")
+def download(name):
+    files = download_files()
+    if name not in files:
+        abort(404)
+    content, mimetype = files[name]
+    return send_file(BytesIO(content), mimetype=mimetype, as_attachment=True, download_name=name)
+
+
+@app.route("/figures/<name>")
+def figure(name):
+    return send_from_directory(FIGURES_DIR.resolve(), name)
 
 
 @app.route("/chart/<stem>.svg")
