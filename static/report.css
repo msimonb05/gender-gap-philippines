@@ -1,0 +1,170 @@
+[data-bs-theme=light] {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #595758;
+  --bs-body-color-rgb: 89, 87, 88;
+  --bs-emphasis-color: #595758;
+  --bs-secondary-color: #595758;
+  --bs-link-color: #a8326b;
+  --bs-link-color-rgb: 168, 50, 107;
+  --bs-link-hover-color: #7d2450;
+  --bs-link-hover-color-rgb: 125, 36, 80;
+  --bs-border-color: #ffc8fb;
+  --bs-tertiary-bg: #ffeef2;
+  --highlight-bg: #ffe4f3;
+}
+
+:root {
+  --accent: #ff92c2;
+  --on-accent: #2b1220;
+}
+
+[data-bs-theme=dark] {
+  --bs-body-bg: #1f1e1f;
+  --bs-body-color: #ffeef2;
+  --bs-body-color-rgb: 255, 238, 242;
+  --bs-emphasis-color: #ffeef2;
+  --bs-secondary-color: #d9d2d6;
+  --bs-link-color: #ff92c2;
+  --bs-link-color-rgb: 255, 146, 194;
+  --bs-link-hover-color: #ffc8fb;
+  --bs-link-hover-color-rgb: 255, 200, 251;
+  --bs-border-color: #595758;
+  --bs-tertiary-bg: #2b2a2b;
+  --highlight-bg: #363435;
+}
+
+.site-bar {
+  background: var(--bs-tertiary-bg);
+  border-color: var(--bs-border-color) !important;
+}
+
+.site-bar .navbar-brand {
+  color: var(--bs-body-color);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-border-color: var(--bs-body-color);
+  --bs-btn-hover-color: var(--on-accent);
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-active-color: var(--on-accent);
+  --bs-btn-active-bg: var(--accent);
+  --bs-btn-active-border-color: var(--accent);
+}
+
+@media (max-width: 991.98px) {
+  .toc .nav-link.sub {
+    display: none;
+  }
+}
+
+.toc .nav-link {
+  color: var(--bs-body-color);
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-left: 3px solid transparent;
+}
+
+.toc .nav-link.sub {
+  padding-left: 1.5rem;
+  font-size: 0.8125rem;
+}
+
+.toc .nav-link.active {
+  background: var(--highlight-bg);
+  border-left-color: var(--accent);
+}
+
+@media (min-width: 992px) {
+  .toc {
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 5.5rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-wrap: nowrap;
+  }
+}
+
+.report {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: 48rem;
+}
+
+.report h1 {
+  font-size: 1.75rem;
+}
+
+.report h1,
+.report h1 + p,
+.report h1 + p + p {
+  text-align: center;
+}
+
+.report h1 + p {
+  margin-bottom: 0;
+}
+
+.report > p:not(h1 + p, h1 + p + p, .formula, [id]) {
+  text-indent: 2em;
+}
+
+.report > p[id] {
+  padding-left: 2em;
+  text-indent: -2em;
+}
+
+.report h2 {
+  font-size: 1.375rem;
+  margin-top: 2.5rem;
+}
+
+.report h3 {
+  font-size: 1.125rem;
+  margin-top: 2rem;
+}
+
+.report :is(h1, h2, h3, p[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.figure-card {
+  --bs-card-bg: var(--bs-body-bg);
+  --bs-card-border-color: var(--bs-border-color);
+  --bs-card-color: var(--bs-body-color);
+}
+
+.formula img {
+  max-width: 22rem;
+  width: 100%;
+}
+
+.data-table {
+  max-height: 24rem;
+  overflow: auto;
+}
+
+.table {
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-bg: var(--bs-body-bg);
+  --bs-table-border-color: var(--bs-border-color);
+}
+
+.cite {
+  text-decoration: underline dotted var(--accent) 2px;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+.tooltip {
+  --bs-tooltip-max-width: 22rem;
+  --bs-tooltip-bg: var(--bs-emphasis-color);
+  --bs-tooltip-color: var(--bs-body-bg);
+  --bs-tooltip-font-size: 0.8125rem;
+}
+
+.tooltip-inner {
+  text-align: left;
+}
