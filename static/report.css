@@ -158,6 +158,40 @@
   cursor: help;
 }
 
+.report.no-indent > p,
+.report.no-indent .cite-block {
+  text-indent: 0;
+  padding-left: 0;
+}
+
+.site-link {
+  color: var(--bs-body-color);
+  text-decoration: none;
+}
+
+.site-link[aria-current="page"] {
+  text-decoration: underline var(--accent) 2px;
+  text-underline-offset: 4px;
+}
+
+.site-footer {
+  color: var(--bs-secondary-color);
+  border-color: var(--bs-border-color) !important;
+}
+
+.cite-block {
+  padding-left: 2em;
+  text-indent: -2em;
+}
+
+.glossary dt {
+  margin-top: 1rem;
+}
+
+.glossary dd {
+  margin-bottom: 0;
+}
+
 .tooltip {
   --bs-tooltip-max-width: 22rem;
   --bs-tooltip-bg: var(--bs-emphasis-color);

@@ -2,9 +2,9 @@
   <div class="card-body">
     <p class="fw-semibold mb-0">{{ number }}</p>
     <p class="fst-italic mb-3">{{ title }}</p>
-    <img class="img-fluid w-100" data-chart="{{ src }}" src="{{ src }}theme=light" alt="{{ alt }}">
+    <img class="img-fluid w-100" data-chart="{{ src }}" src="{{ src }}light.svg" alt="{{ alt }}">
     <figcaption class="small mt-3"><em>Note.</em>{{ note | safe }}</figcaption>
-    <a class="btn btn-sm btn-outline-secondary mt-3 me-2" data-chart-link="{{ src }}" href="{{ src }}theme=light" target="_blank" rel="noopener">Open image in new tab</a>
+    <a class="btn btn-sm btn-outline-secondary mt-3 me-2" data-chart-link="{{ src }}" href="{{ src }}light.svg" target="_blank" rel="noopener">Open image in new tab</a>
     <button class="btn btn-sm btn-outline-secondary mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#data-{{ stem }}" aria-expanded="false" aria-controls="data-{{ stem }}">Show data</button>
     <div class="collapse mt-3" id="data-{{ stem }}">
       {% for name, table in tables.items() %}

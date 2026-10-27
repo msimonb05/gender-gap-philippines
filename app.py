@@ -1,3 +1,4 @@
+import os
 import re
 from io import BytesIO
 from pathlib import Path
@@ -13,6 +14,7 @@ from matplotlib.figure import Figure
 from matplotlib.ticker import FixedLocator, MaxNLocator, ScalarFormatter
 
 DATA_DIR = Path("data")
+SITE_URL = os.environ.get("SITE_URL")
 REPORT = Path("content/mapping-gender-parity-philippines.md")
 SIGN_VIEWS = {
     "psa": {
@@ -59,7 +61,26 @@ FIGURE_TABLES = {
     "seasonality": ["analysis/seasonality", "analysis/seasonality_round_months"],
     "regional_correlations": ["analysis/regional_correlations", "analysis/regional_merged"],
 }
-FIGURE_SOURCES = {"wage_gap_female": ("wage_gap", "sign=female&")}
+CITATION = {
+    "authors": "Bringas, M. S. Z.",
+    "date": "2026, October 27",
+    "title": "Mapping gender parity in the Philippines using evidence from PSA labor, wage, and literacy data",
+}
+GLOSSARY = [
+    ("Labor force participation rate (LFPR)", "The labor force (people who are working or looking for work) divided by the population aged 15 and over, as a percentage."),
+    ("Gender wage gap", "PSA's measure: (male wage - female wage) / male wage x 100. A positive value means men earn more; a negative value means women earn more."),
+    ("Female earnings advantage", "The gender wage gap with its sign reversed, so a positive value means women earn more. A reading aid used in Figure 1b; it is not a PSA statistic."),
+    ("Unadjusted gap", "A gap that compares simple averages without holding occupation, hours, education, or experience constant. Differences in who holds which jobs show up in it."),
+    ("Time-rated worker on full-time basis", "An employee paid by a unit of time, such as an hour, day, or month, rather than by output, who works full time. PSA's wage table covers only this group."),
+    ("Functional literacy", "PSA's FLEMMS measure of whether a person aged 10 to 64 can read, write, compute, and comprehend."),
+    ("Parity ratio", "A female value divided by the male value for the same indicator. 1.0 is parity; below 1.0 the female value is lower."),
+    ("Shift-share decomposition", "A split of the change in the labor force into a population effect, a participation effect, and their interaction."),
+    ("Confidence interval", "A range of values consistent with the data at a stated level, here 95%. A wide interval means the estimate is uncertain."),
+    ("Spearman's rank correlation (rho)", "A measure from -1 to +1 of whether two variables rise and fall together in rank order. It is less affected by outliers than Pearson's r."),
+    ("Bootstrap", "Resampling the regions many times (here 10,000) to see how much a statistic could vary, which gives its confidence interval."),
+    ("Holm correction", "An adjustment of p-values when several hypotheses are tested at once, so the chance of a false positive across all of them stays at 5%."),
+    ("Ecological fallacy", "The error of reading a pattern across regions as a pattern among individuals."),
+]
 AUTHOR_ALIASES = {
     "PSA": "Philippine Statistics Authority",
     "PIDS": "Philippine Institute for Development Studies",
@@ -116,8 +137,8 @@ def sex_palette(t):
     return {"Female": t["female"], "Male": t["male"]}
 
 
-def wage_gap_chart(t):
-    view = sign_view(request.args.get("sign", "psa"))
+def wage_gap_chart(t, sign="psa"):
+    view = sign_view(sign)
     df = load("wage_gap_by_region")
     national = load("national_wage_gap")["national_gap_pct"].iloc[0] * view["factor"]
     plot = df.assign(value=df["gap_pct"] * view["factor"]).sort_values("value")
@@ -347,6 +368,7 @@ def formula_chart(t):
 
 CHARTS = {
     "wage_gap": wage_gap_chart,
+    "wage_gap_female": lambda t: wage_gap_chart(t, "female"),
     "labor_participation": labor_participation_chart,
     "labor_force_persons": labor_force_persons_chart,
     "school_enrollment": school_enrollment_chart,
@@ -391,7 +413,6 @@ def citation(refs, author, years, text):
 
 def figure_card(m):
     number, title, alt, stem, note = m.groups()
-    chart, extra = FIGURE_SOURCES.get(stem, (stem, ""))
     tables = {name: load(name).to_html(index=False, border=0, classes="table table-sm table-striped") for name in FIGURE_TABLES[stem]}
     return render_template(
         "_figure.html",
@@ -399,7 +420,7 @@ def figure_card(m):
         title=title,
         alt=alt,
         stem=stem,
-        src=f"/chart/{chart}.svg?{extra}",
+        src=f"chart/{stem}-",
         note=note,
         tables=tables,
     )
@@ -407,7 +428,7 @@ def figure_card(m):
 
 def render_report():
     source = FORMULA_RE.sub(
-        '<p class="formula"><img data-chart="/chart/formula.svg?" src="/chart/formula.svg?theme=light" '
+        '<p class="formula"><img data-chart="chart/formula-" src="chart/formula-light.svg" '
         'alt="gap = (male wage - female wage) / male wage x 100"></p>',
         REPORT.read_text(encoding="utf-8"),
     )
@@ -428,11 +449,17 @@ def report():
     return render_template("report.html", content=content, toc=toc)
 
 
-@app.route("/chart/<name>.svg")
-def chart(name):
+@app.route("/about.html")
+def about():
+    return render_template("about.html", citation={**CITATION, "url": SITE_URL or request.url_root}, glossary=GLOSSARY)
+
+
+@app.route("/chart/<stem>.svg")
+def chart(stem):
+    name, _, theme = stem.rpartition("-")
     if name not in CHARTS:
         abort(404)
-    t = theme_view(request.args.get("theme", "light"))
+    t = theme_view(theme)
     buf = BytesIO()
     with rc_context(theme_rc(t)):
         CHARTS[name](t).savefig(buf, format="svg", bbox_inches="tight")

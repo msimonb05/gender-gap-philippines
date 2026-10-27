@@ -18,11 +18,11 @@ function applyTheme(theme) {
   toggle.setAttribute("aria-label", `Switch to ${next} mode`);
   toggle.title = `Switch to ${next} mode`;
   document.querySelectorAll("img[data-chart]").forEach((img) => {
-    const src = img.dataset.chart + "theme=" + theme;
+    const src = img.dataset.chart + theme + ".svg";
     if (img.getAttribute("src") !== src) img.src = src;
   });
   document.querySelectorAll("a[data-chart-link]").forEach((a) => {
-    a.href = a.dataset.chartLink + "theme=" + theme;
+    a.href = a.dataset.chartLink + theme + ".svg";
   });
 }
 
@@ -59,6 +59,19 @@ addEventListener("scroll", markCurrentSection, { passive: true });
 markCurrentSection();
 
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => new bootstrap.Tooltip(el));
+
+const copyButton = document.getElementById("copy-citation");
+if (copyButton) {
+  copyButton.addEventListener("click", async () => {
+    const status = document.getElementById("copy-status");
+    try {
+      await navigator.clipboard.writeText(document.getElementById("citation-text").innerText);
+      status.textContent = "Copied";
+    } catch (e) {
+      status.textContent = "Couldn't copy. Select the text instead.";
+    }
+  });
+}
 
 document.addEventListener("show.bs.collapse", (e) => {
   document.querySelector(`[data-bs-target="#${e.target.id}"]`).textContent = "Hide data";
