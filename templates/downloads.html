@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Data and downloads - Mapping Gender Parity in the Philippines{% endblock %}
+
+{% block description %}Download the report, its figures, and the cleaned PSA data, or view the source code.{% endblock %}
+
+{% block page_path %}downloads.html{% endblock %}
+
+{% block main_class %}no-indent{% endblock %}
+
+{% block toc %}
+<a class="nav-link" href="#s-report">Report</a>
+<a class="nav-link" href="#s-data">Data</a>
+<a class="nav-link" href="#s-code">Source code</a>
+{% endblock %}
+
+{% block content %}
+<h1>Data and downloads</h1>
+
+<h2 id="s-report">Report</h2>
+<ul class="list-unstyled downloads">
+  <li><a href="downloads/{{ report_name }}" download>Report in Markdown</a> <span class="small">({{ report_name }}, {{ (sizes[report_name] / 1024) | round | int }} KB)</span></li>
+  <li><a href="downloads/report-with-figures.zip" download>Report with figures</a> <span class="small">(Markdown and 11 PNG figures, {{ (sizes['report-with-figures.zip'] / 1024) | round | int }} KB)</span></li>
+  <li><button id="print-report" class="btn btn-sm btn-outline-secondary" type="button">Print or save as PDF</button> <span class="small">Opens the report and your browser's print dialog. Choose "Save as PDF" as the printer.</span></li>
+</ul>
+
+<h2 id="s-data">Data</h2>
+<ul class="list-unstyled downloads">
+  <li><a href="downloads/cleaned-data.zip" download>Cleaned data</a> <span class="small">(every CSV in <code>data/</code> and <code>data/analysis/</code>, {{ (sizes['cleaned-data.zip'] / 1024) | round | int }} KB)</span></li>
+</ul>
+<p>These files are cleaned from published Philippine Statistics Authority tables. The original tables are listed with links in the report's <a href="./#s-references">references</a>.</p>
+
+<h2 id="s-code">Source code</h2>
+{% if repo_url %}
+<p>The code that cleans the data, runs the analyses, and builds this site is on <a href="{{ repo_url }}">GitHub</a>, together with the raw PSA files.</p>
+{% else %}
+<p>The code that cleans the data, runs the analyses, and builds this site is in the project's GitHub repository, together with the raw PSA files.</p>
+{% endif %}
+{% endblock %}
