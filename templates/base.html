@@ -19,6 +19,7 @@ let theme = null;
 try { theme = localStorage.getItem("theme"); } catch (e) {}
 document.documentElement.dataset.bsTheme = theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 </script>
+{% block base %}{% endblock %}
 <link rel="stylesheet" href="static/vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="static/report.css">
 </head>

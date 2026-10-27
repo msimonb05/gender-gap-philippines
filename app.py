@@ -521,6 +521,16 @@ def about():
     return render_template("about.html", citation={**CITATION, "url": SITE_URL or request.url_root}, glossary=GLOSSARY)
 
 
+@app.route("/404.html")
+def not_found_page():
+    return render_template("404.html")
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return render_template("404.html"), 404
+
+
 @app.route("/downloads.html")
 def downloads():
     sizes = {name: len(content) for name, (content, _) in download_files().items()}

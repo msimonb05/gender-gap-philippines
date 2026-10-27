@@ -5,7 +5,7 @@ from pathlib import Path
 import app
 
 SITE = Path("site")
-PAGES = {"index.html": "/", "about.html": "/about.html", "downloads.html": "/downloads.html"}
+PAGES = {"index.html": "/", "about.html": "/about.html", "downloads.html": "/downloads.html", "404.html": "/404.html"}
 
 
 def fetch(client, url):
