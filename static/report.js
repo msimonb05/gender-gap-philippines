@@ -56,6 +56,15 @@ function markCurrentSection() {
 }
 
 addEventListener("scroll", markCurrentSection, { passive: true });
+
+const backToTop = document.getElementById("back-to-top");
+
+function toggleBackToTop() {
+  backToTop.classList.toggle("visible", scrollY > 600);
+}
+
+addEventListener("scroll", toggleBackToTop, { passive: true });
+toggleBackToTop();
 markCurrentSection();
 
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => new bootstrap.Tooltip(el));
@@ -73,9 +82,25 @@ if (copyButton) {
   });
 }
 
+const printButton = document.getElementById("print-report");
+if (printButton) {
+  printButton.addEventListener("click", () => {
+    location.href = "./#print";
+  });
+}
+
+if (location.hash === "#print") {
+  addEventListener("load", () => {
+    history.replaceState(null, "", location.pathname);
+    print();
+  });
+}
+
 document.addEventListener("show.bs.collapse", (e) => {
-  document.querySelector(`[data-bs-target="#${e.target.id}"]`).textContent = "Hide data";
+  const button = document.querySelector(`[data-bs-target="#${e.target.id}"]`);
+  button.textContent = button.dataset.hideText;
 });
 document.addEventListener("hide.bs.collapse", (e) => {
-  document.querySelector(`[data-bs-target="#${e.target.id}"]`).textContent = "Show data";
+  const button = document.querySelector(`[data-bs-target="#${e.target.id}"]`);
+  button.textContent = button.dataset.showText;
 });
